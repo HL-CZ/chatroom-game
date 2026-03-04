@@ -1,0 +1,18 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  text-align: center;
+  font-family: 'Roboto';
+  margin: 0;
+  padding-top: 0.1px;
+}
+
+#footer {
+  background: paleturquoise;
+}
+
+#messageform {
+  display: none;
+}

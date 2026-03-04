@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>C(h)atroom</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/index.js"></script>
+    <link rel="stylesheet" href="/index.css">
+</head>
+
+<body>
+    <div>
+        <h1 id="logo">C(h)atroom</h1>
+    </div>
+    <form id="usernameform">
+        <input type="text" placeholder="Name" id="username">
+        <button type="submit">Enter</button>
+    </form>
+
+    <form id="messageform">
+        <input type="text" placeholder="Chat!" id="message">
+        <button type="submit">Send</button>
+    </form>
+
+    <div id="messageArea"></div>
+
+    <div id="footer"></div>
+</body>
+
+</html>
