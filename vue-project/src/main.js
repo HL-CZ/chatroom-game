@@ -1,15 +1,25 @@
-import './assets/main.css'
-
 import { createApp } from 'vue'
 import App from './App.vue'
-import { createRouter, createWebHistory } from 'vue-router'
-import routes from './router/routes'
+import './registerServiceWorker'
+import router from './router'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 
-let router = createRouter({
-    history: createWebHistory(),
-    routes: routes
-});
+import { initializeApp } from 'firebase/app'
+import { getAuth, connectAuthEmulator } from 'firebase/auth'
 
-const app = createApp(App);
-app.use(router);
-app.mount('#app');
+const firebaseConfig = {
+  // key
+};
+
+initializeApp(firebaseConfig)
+
+if (location.hostname === "localhost") {
+  connectAuthEmulator(getAuth(), "http://localhost:9099");
+}
+
+const app = createApp(App)
+
+app.use(router)
+app.use(ElementPlus)
+app.mount('#app')
