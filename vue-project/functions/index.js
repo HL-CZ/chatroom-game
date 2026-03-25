@@ -61,25 +61,17 @@ admin.initializeApp();
 
 export const sendMessage = onCall(async (request) => {
   logger.log("Incoming data:", request.data);
-  const { user, text } = request.data;
+  const { user, lobby, text, time } = request.data;
 
-  if (!user || !text) {
+  if (!user || !lobby || !text || !time) {
     throw new HttpsError("invalid-argument", "Missing user/text");
   }
 
   const db = admin.database();
-/*
-  const messageRef = db.ref("messages").push();
 
-  await messageRef.set({
-    user,
+  await db.ref(`lobbies/${lobby}/messages/${user}`).set({
     text,
-    timestamp: Date.now()
-  });
-*/
-
-  await db.ref(`messages/${user}`).set({
-    text
+    time
   });
 
   return { success: true };

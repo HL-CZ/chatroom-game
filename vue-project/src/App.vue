@@ -1,7 +1,6 @@
 <template>
   <router-view />
 </template>
-
 <style>
 #app {
   -moz-osx-font-smoothing: grayscale;
