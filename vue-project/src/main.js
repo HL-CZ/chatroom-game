@@ -9,7 +9,7 @@ import { initializeApp } from 'firebase/app'
 import { getAuth, connectAuthEmulator, onAuthStateChanged } from 'firebase/auth'
 
 const firebaseConfig = {
- //API key here! ---------------------------------------------------------------------------------
+   //api her
 };
 
 import { reactive } from 'vue'
