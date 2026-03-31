@@ -18,7 +18,7 @@ export class Game extends Scene
         this.keyESC
         this.player;
         this.cursors;
-        
+        this.sturing;
     }
     create ()
     {
@@ -40,21 +40,47 @@ export class Game extends Scene
             align: 'center'
         }).setDepth(100).setOrigin(0.5);
         */
-        this.player = this.physics.add.sprite(200, 350, 'catbeni');
+        if (1 == 1) {
+            this.sturing = 'catbeni';
+        }
+        this.player = this.physics.add.sprite(200, 350, this.sturing);
         this.player.setCollideWorldBounds(true);
         
         
         this.cursors = this.input.keyboard.createCursorKeys();
+        const emoButton = this.add.text(100, 100, 'Become Emo', { fill: '#0f0' })
+            .setInteractive()
+            .on('pointerdown', () => this.changeCharacter('emo'));
+       
+        const fluffyButton = this.add.text(100, 200, 'Become fluffy', { fill: '#0f0' })
+            .setInteractive()
+            .on('pointerdown', () => this.changeCharacter('fluffy'));
         
-        
+        const uuhButton = this.add.text(100, 300, 'Become uuh', { fill: '#0f0' })
+            .setInteractive()
+            .on('pointerdown', () => this.changeCharacter('uuh'));
 
+        const OrangeButton = this.add.text(100, 400, 'Lose Brain', { fill: '#0f0' })
+            .setInteractive()
+            .on('pointerdown', () => this.changeCharacter('orange'));
+
+        const l3Button = this.add.text(400, 300, 'Become :3', { fill: '#0f0' })
+            .setInteractive()
+            .on('pointerdown', () => this.changeCharacter('l3'));
+
+        const ChineseButton = this.add.text(400, 400, 'Become CC!', { fill: '#0f0' })
+            .setInteractive()
+            .on('pointerdown', () => this.changeCharacter('CC'));
+
+        const CatbeniButton = this.add.text(400, 500, 'Become Catbeni!', { fill: '#0f0' })
+            .setInteractive()
+            .on('pointerdown', () => this.changeCharacter('catbeni'));
         EventBus.emit('current-scene-ready', this);
     }
     update ()
     {   
         if (this.keyESC.isDown || this.keyENTER.isDown) {
             this.isChat = false;
-
         }
         if (this.isChat) {
             return;
@@ -79,5 +105,10 @@ export class Game extends Scene
        
         
                
+    }
+    changeCharacter(char) {
+        this.sturing = char
+        this.player.destroy()
+        this.player = this.physics.add.sprite(this.player.x, this.player.y, this.sturing);
     }
 }
