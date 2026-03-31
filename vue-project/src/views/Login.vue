@@ -1,3 +1,9 @@
+/**
+ * Portions of this code are based on examples from the official Firebase documentation:
+ * https://firebase.google.com/docs
+ * Provider: Google Firebase
+ */
+
 <template>
     <h1> Login to Your Account </h1>
     <p>Email/Passpord</p>
