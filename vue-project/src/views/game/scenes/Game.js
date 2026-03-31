@@ -11,13 +11,6 @@ export class Game extends Scene
 
         this.user;
 
-        EventBus.on('newPositions', (data) => {
-            this.position.clear()
-            for (let i = 0; i < data.length; i++) {
-                this.position.set(data[i][0], data[i][1]);
-            }
-        });
-
         this.isChat = false;
         this.keyW;
         this.keyA;
@@ -27,22 +20,32 @@ export class Game extends Scene
         this.playerSprite;
         this.framesElapsed = 0;
 
-        this.playerList = new Map();
+        this.players = new Map();
         this.position = new Map();
+        this.labels = new Map();
+        this.usernames = new Map();
     }
     create () {
 
-        this.playerLabel = this.add.text(200, 400, this.user, {
-            fontFamily: 'Arial Black', fontSize: 18, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
-            align: 'center'
-        }).setDepth(100).setOrigin(0.5);
-
         EventBus.on('user', (user) => {
             this.user = user;
-            console.log("emitted username is recieved: ",user);
             this.playerLabel.setText(user.displayName);
+            console.log("set text")
         });
+
+        EventBus.on('newpos', (data) => {
+            this.position.clear()
+            let newdata = Object.entries(data)
+            for (let i = 0; i < newdata.length; i++) {
+                this.position.set(newdata[i][0], newdata[i][1]);
+            }
+        });
+
+        EventBus.on('sendusername', (data) => {
+            this.usernames.set(data[0], data[1])
+            //console.log("recieved: ", data[0], data[1])
+        })
+        
 
         // const keys = this.input.keyboard.addKey("W");
         this.keyW = this.input.keyboard.addKey("W");
@@ -67,29 +70,71 @@ export class Game extends Scene
         var cursors;
         
         cursors = this.input.keyboard.createCursorKeys();
+
+        console.log("added label")
+        this.playerLabel = this.add.text(200, 400, "", {
+            fontFamily: 'Arial Black', fontSize: 18, color: '#ffffff',
+            stroke: '#000000', strokeThickness: 8,
+            align: 'center'
+        }).setDepth(100).setOrigin(0.5);
     
         EventBus.emit('current-scene-ready', this);
 
         EventBus.emit('listener-ready', true);
     }
     update () {
-        if (this.framesElapsed % 60 == 0) {
+        if (this.framesElapsed % 15 == 0) {
             EventBus.emit("position", [this.playerSprite.x, this.playerSprite.y]);
             for (const [key, value] of this.position) {
                 if (key != this.user.uid) {
                     //create an image for each player except yourself
-                    if (this.playerList.get(key) == null) {
-                        console.log(key," has no image in the map yet, creating one")
-                        this.playerList.set(key, this.add.image(200, 200, 'catbeni'))
-                    }
-                    //Now they have an image, so we move them to the correct position
-                    this.playerList.get(key).x = this.position.get(key).x
-                    this.playerList.get(key).y = this.position.get(key).y
                     
+                    if (this.players.get(key) == null) {
+                        //Player is not in list yet, make new image
+                        this.players.set(key, this.add.image(value.x, value.y, 'catbeni'));
+                    } else {
+                        //player image exists, move instead
+                        this.players.get(key).x = value.x
+                        this.players.get(key).y = value.y
+                    }
+                    
+                    if (this.usernames.get(key) == null) {
+                        EventBus.emit('getusername', key)
+                    }
+
+                    if (this.labels.get(key) == null && this.usernames.get(key) != null) {
+                        //Player label is not in list yet, make new image
+                        this.labels.set(key, this.add.text(value.x, value.y, this.usernames.get(key), {
+                            fontFamily: 'Arial Black', fontSize: 18, color: '#ffffff',
+                            stroke: '#000000', strokeThickness: 8,
+                            align: 'center'
+                        }).setDepth(100).setOrigin(0.5))
+                    } else if (this.labels.get(key) != null && this.usernames.get(key) != null) {
+                        //player image exists, move instead
+                        this.labels.get(key).x = value.x
+                        this.labels.get(key).y = value.y-60
+                    }
+                }
+            }
+
+            for (const [key, value] of this.players) {
+                if (this.position.get(key) == null) {
+                    console.log("player ", key, " disconnected")
+                    this.players.get(key).destroy()
+                    this.players.delete(key)
+                }
+            }
+
+            for (const [key, value] of this.labels) {
+                if (this.position.get(key) == null) {
+                    this.labels.get(key).destroy()
+                    this.labels.delete(key)
                 }
             }
 
             //console.log(this.position)
+            //console.log(this.usernames)
+            //console.log(this.user)
         }
         if (this.keyToggle.isDown) {
             this.isChat = !this.isChat;

@@ -37,6 +37,17 @@ import {
 
   sendPasswordResetEmail
 } from 'firebase/auth'
+import { useRouter } from 'vue-router'
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { initializeApp } from "firebase/app";
+
+import { inject } from 'vue';
+const firebaseConfig = inject('apiKey');
+
+const app = initializeApp(firebaseConfig);
+const functions = getFunctions(app);
+
+const setDisplayNamefn = httpsCallable(functions, "setDisplayName");
 
 const email = ref('')
 const password = ref('')
@@ -53,7 +64,8 @@ const signIn = () => {
       return signInWithEmailAndPassword(auth, email.value, password.value)
     })
     .then(() => {
-      router.push('/Feed')
+      console.log('Successfully logged in!')
+      //router.push('/Feed')
     })
     .catch(error => {
       if (error.code === 'auth/invalid-email') {
@@ -76,6 +88,18 @@ const signInBtn = () => {
     })
     .then(() => {
       router.push('/Feed')
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      console.log('User signed in succesfully: ',result)
+
+      try {
+        const result = setDisplayNamefn({
+            user: getAuth().currentUser.displayName,
+            uid: getAuth().currentUser.uid
+        });
+      } catch (err) {
+        console.error("Error setting display name:", err);
+      }
     })
     .catch(error => {
       console.error(error)

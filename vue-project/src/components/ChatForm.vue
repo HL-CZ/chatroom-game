@@ -24,7 +24,7 @@ const sendMessagefn = httpsCallable(functions, "sendMessage");
 
 const message = ref('')
 
-const props = defineProps(['user', 'code'])
+const props = defineProps(['user'])
 
 var displayName = ref('')
 
@@ -54,7 +54,6 @@ async function handleSubmit() {
         const result = await sendMessagefn({
         //The username will be replaced with the user's auth token or something
         user: displayName,
-        lobby: props.code().code,
         text: message.value,
         time: Date.now()
     });

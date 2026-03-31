@@ -12,7 +12,7 @@ import { initializeApp } from "firebase/app";
 const scene = ref();
 const game = ref();
 
-const emit = defineEmits(['current-active-scene', 'username']);
+const emit = defineEmits(['current-active-scene', 'username', 'newpos']);
 
 import { inject } from 'vue';
 
@@ -29,18 +29,17 @@ const functions = getFunctions(app);
 const setPositionfn = httpsCallable(functions, "setPosition");
 
 onMounted(() => {
+    console.log(user)
     window.addEventListener('beforeunload', (e) => {
         e.preventDefault();
         const result = setPositionfn({
             uid: user.uid,
-            room: props.code().code
         })
     })
 
     try {
         const result = setPositionfn({
         uid: user.uid,
-        room: props.code().code,
         x: 200,
         y: 350
     });
@@ -54,25 +53,27 @@ onMounted(() => {
         var dbref = fbRef(db, 'positions/');
         onValue(dbref, (snapshot) => {
             const data = snapshot.val();
-            EventBus.emit('newPositions', Object.entries(data[props.code().code]));
+            EventBus.emit('newpos', data);
         });
-
+        
+        
         dbref = fbRef(db, 'displayNames/');
         if (user.displayName == null) {
             get(child(dbref, `${user.uid}`)).then((snapshot) => {
                 if (snapshot.exists()) {
-                    console.log("username from db is emitted")
-                    EventBus.emit('user', snapshot.val().user);
+                    //console.log("username from db is emitted")
+                    user.displayName = snapshot.val().user
                 }
             }).catch((error) => {
                 console.error(error);
             })
         } else {
-            console.log("username from google is emitted: ", user.displayName)
-            EventBus.emit('user', user);
+            //console.log("username from google is emitted: ", user.displayName)
+            //EventBus.emit('user', user);
         }
+        EventBus.emit('user', user)
     })
-    
+    console.log(user.displayName)
 
     game.value = StartGame('game-container');        
 
@@ -85,9 +86,19 @@ onMounted(() => {
     EventBus.on('position', (pos) => {
         const result = setPositionfn({
             uid: user.uid,
-            room: props.code().code,
             x: pos[0],
             y: pos[1]
+        })
+    })
+
+    EventBus.on('getusername', (user) => {
+        const dbref = fbRef(getDatabase());
+        get(child(dbref, `displayNames/${user}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                EventBus.emit('sendusername', [user, snapshot.val().user])
+            }
+        }).catch((error) => {
+            console.error(error);
         })
     })
 
