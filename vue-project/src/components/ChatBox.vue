@@ -23,14 +23,11 @@ const db = getDatabase();
 
 const messages = refVue([]);
 
-const props = defineProps(['code']);
-
 var lastTimeStamp = 0;
 
-var dbref = ref(db, 'lobbies/');
+var dbref = ref(db, 'messages/');
 onValue(dbref, (snapshot) => {
     const data = snapshot.val();
-    console.log("Code: ", props.code().code);
     console.log("data: ", data);
     
     //console.log("IMPORTANT: ", Object.entries(data[props.code().code].messages));
@@ -41,8 +38,8 @@ onValue(dbref, (snapshot) => {
     var newestTimeStamp = -1; 
     var newestTimeIndex;
 
-    for (let i = 0; i < Object.entries(data[props.code().code].messages).length; i++) {
-        var [username, messagedata] = Object.entries(data[props.code().code].messages)[i];
+    for (let i = 0; i < Object.entries(data).length; i++) {
+        var [username, messagedata] = Object.entries(data)[i];
         //console.log("Checking: ", username, messagedata.text, messagedata.time);
         
         //console.log("Message time: ", messagedata.time, " Newest time: ", newestTimeStamp);
@@ -54,7 +51,7 @@ onValue(dbref, (snapshot) => {
     }
 
     if (newestTimeStamp != lastTimeStamp) {
-        [username, messagedata] = Object.entries(data[props.code().code].messages)[newestTimeIndex];
+        [username, messagedata] = Object.entries(data)[newestTimeIndex];
         messages.value.push(`${username}: ${messagedata.text}`);
         lastTimeStamp = newestTimeStamp;
     }

@@ -1,7 +1,6 @@
 <script setup>
 import chatForm from '@/components/ChatForm.vue'
 import chatBox from '@/components/ChatBox.vue'
-import lobbySelect from '@/components/LobbySelect.vue'
 import { getAuth,onAuthStateChanged } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 import { onBeforeUnmount } from 'vue'
@@ -9,21 +8,9 @@ import { ref, toRaw } from 'vue';
 import PhaserGame from './PhaserGame.vue'; 
 
 import { inject } from 'vue';
-let lobby = "home";
 
 const user = inject('user');
 
-const setLobby = (code) => {
-    lobby = code;
-};
-
-const getLobby = () => {
-    return {
-        code: lobby
-    };
-};
-
-  
 //  References to the PhaserGame component (game and scene are exposed)
 const phaserRef = ref();
 const router = useRouter()
@@ -59,12 +46,11 @@ const changeScene = () => {
 </script>
 
 <template>
-    <PhaserGame ref="phaserRef" @current-active-scene="currentScene" :code="getLobby"/>
+    <PhaserGame ref="phaserRef" @current-active-scene="currentScene"/>
     
     <div style="display: flex; flex-direction: column;">
-        <chatBox :code="getLobby" />
-        <chatForm :code="getLobby" :user="user" />
-        <lobbySelect @lobby-code="setLobby" />
+        <chatBox />
+        <chatForm :user="user" />
     </div>
 
 </template>
