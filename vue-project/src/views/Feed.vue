@@ -46,13 +46,14 @@ const changeScene = () => {
 </script>
 
 <template>
+  <div style="display: flex; flex-direction: row; justify-content: center; align-items: stretch;">
     <PhaserGame ref="phaserRef" @current-active-scene="currentScene"/>
     
-    <div style="display: flex; flex-direction: column;">
+    <div style="display: flex; flex-direction: column; max-height: 768px;">
         <chatBox />
         <chatForm :user="user" />
     </div>
-
+  </div>
 </template>
 
 

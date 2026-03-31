@@ -1,5 +1,6 @@
 <template>
-    <div id="msg">
+    <!--<div id="msg" style="display: flex; flex-direction: column-reverse;">-->
+    <div id="msg" ref="msgContainer"> 
         <div v-for="message in messages">
             {{ message }}
             <!--Could put a separator here for messages-->
@@ -22,6 +23,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase();
 
 const messages = refVue([]);
+const msgContainer = refVue(null);
 
 var lastTimeStamp = 0;
 
@@ -54,6 +56,9 @@ onValue(dbref, (snapshot) => {
         [username, messagedata] = Object.entries(data)[newestTimeIndex];
         messages.value.push(`${username}: ${messagedata.text}`);
         lastTimeStamp = newestTimeStamp;
+        if (msgContainer.value) {
+            msgContainer.value.scrollTop = msgContainer.value.scrollHeight;
+        }
     }
 });
 
