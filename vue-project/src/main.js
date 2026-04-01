@@ -8,6 +8,8 @@ import 'element-plus/dist/index.css'
 import { initializeApp } from 'firebase/app'
 import { getAuth, connectAuthEmulator, onAuthStateChanged } from 'firebase/auth'
 
+import '@/assets/Login.css'
+
 const firebaseConfig = {
   
 };
