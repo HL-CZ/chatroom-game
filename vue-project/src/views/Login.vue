@@ -58,7 +58,7 @@ const signIn = () => {
       return signInWithEmailAndPassword(auth, email.value, password.value)
     })
     .then(() => {
-      router.push('/Feed')
+      router.push('/')
     })
     .catch(error => {
       if (error.code === 'auth/invalid-email') {
@@ -80,7 +80,15 @@ const signInBtn = () => {
       return signInWithPopup(auth, provider)
     })
     .then(() => {
-      router.push('/Feed')
+      router.push('/')
+      try {
+        const result = setDisplayNamefn({
+            user: getAuth().currentUser.displayName,
+            uid: getAuth().currentUser.uid
+        });
+      } catch (err) {
+        console.error("Error setting display name:", err);
+      }
     })
     .catch(error => {
       console.error(error)
