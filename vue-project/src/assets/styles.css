@@ -98,3 +98,15 @@ input:focus, button:focus {
   border: #2c3e50 2px solid;
   margin-left: 10px;
 }
+
+#msg {
+  border-bottom: solid 2px #2c3e50;
+}
+
+#msg > *:nth-child(odd) {
+  background-color: #E0AC9D;
+}
+
+.chatform {
+  background-color: #E0AC9D;
+}

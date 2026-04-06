@@ -13,7 +13,6 @@ const firebaseConfig = {
   //api key
 };
 
-
 import { reactive } from 'vue'
 
 initializeApp(firebaseConfig)

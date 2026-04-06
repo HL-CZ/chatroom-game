@@ -11,12 +11,9 @@ export class Game extends Scene
 
         this.user;
 
-        this.isChat = false;
         this.keyW;
         this.keyA;
         this.keyS;
-        this.keyD;
-        this.keyToggle;
         this.playerSprite;
         this.framesElapsed = 0;
 
@@ -49,22 +46,13 @@ export class Game extends Scene
         
 
         // const keys = this.input.keyboard.addKey("W");
-        this.keyW = this.input.keyboard.addKey("W");
-        this.keyA = this.input.keyboard.addKey("A");
-        this.keyS = this.input.keyboard.addKey("S");
-        this.keyD = this.input.keyboard.addKey("D");
-        this.keyToggle = this.input.keyboard.addKey("FORWARD_SLASH");
+        
         
 
         this.cameras.main.setBackgroundColor(0x00ff00);
 
         this.add.image(512, 384, 'green');
         
-        this.add.text(512, 200, 'Green Map', {
-            fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
-            align: 'center'
-        }).setDepth(100).setOrigin(0.5);
         //player = this.physics.add.sprite(200, 350, 'catbeni');
         this.playerSprite = this.add.image(200, 350, 'catbeni');
         //player.setCollideWorldBounds(true);
@@ -137,33 +125,34 @@ export class Game extends Scene
             //console.log(this.usernames)
             //console.log(this.user)
         }
-        if (this.keyToggle.isDown) {
-            this.isChat = !this.isChat;
-            console.log("buh")
-           
-        }
-        if (this.isChat) {
-            return;
-        }
-        if (this.keyW.isDown) {
-            // W key
-            this.playerSprite.y -=5;
-        }
-        if (this.keyD.isDown) {
-            // D key 
-            this.playerSprite.x += 5;
-        }
-        if (this.keyS.isDown) {
-            // S key
-            this.playerSprite.y +=5;
-        }
-        if (this.keyA.isDown) {
-            // A key
-            this.playerSprite.x -=5;
-        } 
+        if (document.activeElement.tagName != "INPUT") {
+            var keyW = this.input.keyboard.addKey("W");
+            var keyA = this.input.keyboard.addKey("A");
+            var keyS = this.input.keyboard.addKey("S");
+            var keyD = this.input.keyboard.addKey("D");
 
-        this.playerLabel.x = this.playerSprite.x;
-        this.playerLabel.y = this.playerSprite.y-60;
+            if (keyW.isDown) {
+                // W key
+                this.playerSprite.y -=5;
+            }
+            if (keyD.isDown) {
+                // D key 
+                this.playerSprite.x += 5;
+            }
+            if (keyS.isDown) {
+                // S key
+                this.playerSprite.y +=5;
+            }
+            if (keyA.isDown) {
+                // A key
+                this.playerSprite.x -=5;
+            } 
+
+            this.playerLabel.x = this.playerSprite.x;
+            this.playerLabel.y = this.playerSprite.y-60;
+        } else {
+            this.input.keyboard.clearCaptures();
+        }
         
         this.framesElapsed++;
     }

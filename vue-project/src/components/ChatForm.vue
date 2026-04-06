@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="handleSubmit" style="bottom: 0%;">
+    <form class="chatform" @submit.prevent="handleSubmit" style="bottom: 0%;">
         <input  v-model="message" type="text" placeholder="Type your message!">
         <button type="submit">Send</button>
     </form>
